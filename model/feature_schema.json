@@ -1,0 +1,8 @@
+{
+  "features": [
+    "length",
+    "entropy"
+  ],
+  "target": "label",
+  "version": 1
+}

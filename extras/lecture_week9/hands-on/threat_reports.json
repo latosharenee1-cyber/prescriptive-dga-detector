@@ -1,0 +1,3 @@
+{"tokens": ["The", "malware", "Guloader", "was", "used", "by", "APT42", "."], "ner_tags": [0, 0, 1, 0, 0, 0, 1, 0]}
+{"tokens": ["We", "attribute", "this", "activity", "to", "Fancy", "Bear", "."], "ner_tags": [0, 0, 0, 0, 0, 1, 2, 0]}
+{"tokens": ["The", "attack", "leveraged", "the", "Cobalt", "Strike", "framework", "."], "ner_tags": [0, 0, 0, 0, 1, 2, 2, 0]}

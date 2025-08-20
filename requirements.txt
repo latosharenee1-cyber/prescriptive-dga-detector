@@ -1,0 +1,5 @@
+h2o==3.44.0.3
+pandas>=2.0.0
+numpy>=1.24.0
+shap>=0.45.0
+google-generativeai>=0.7.0
