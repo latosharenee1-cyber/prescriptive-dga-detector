@@ -1,4 +1,16 @@
+# Python
 .venv/
 __pycache__/
-*.pyc
+*.log
+*.tmp
+
+# H2O / model artifacts
+model/GBM_*
+model/bin/
+model/*.zip
+!model/DGA_Leader*.zip
+
+# OS noise
+Thumbs.db
 .DS_Store
+
