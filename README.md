@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Prescriptive DGA Detector
 
 End-to-end tool that classifies a domain as **Legit** or **DGA**, explains *why* using **SHAP**, and generates a **prescriptive incident-response playbook** using **Google Gemini**.
@@ -51,3 +52,6 @@ cd %USERPROFILE%\Downloads\prescriptive_dga_detector_plus2
 py -m venv .venv
 .\.venv\Scripts\activate
 py -m pip install -r requirements.txt
+=======
+# prespscriptive-DGA-detector
+>>>>>>> origin/main
