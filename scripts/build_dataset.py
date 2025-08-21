@@ -20,58 +20,88 @@ Output
 data/dga_labeled.csv with columns: domain,label
 """
 
-import os
-import csv
+# scripts/build_dataset.py
 import argparse
+import csv
+import os
 import random
 
-def read_domains(path):
-    domains = []
-    low = set()
+
+COMMON_COLS = [
+    "domain",
+    "domains",
+    "url",
+    "host",
+    "hostname",
+    "fqdn",
+]
+
+
+def normalize_domain(s: str) -> str:
+    """Lowercase, trim dots and whitespace."""
+    return (s or "").strip().lower().strip(".")
+
+
+def read_domains(path: str) -> list[str]:
+    """
+    Read domains from a .txt or .csv file.
+
+    - .txt: one domain per line
+    - .csv: uses common column names (domain, url, host, hostname, fqdn, etc.)
+    """
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"File not found: {path}")
+
     name = os.path.basename(path).lower()
-    try:
-        if name.endswith(".txt"):
-            with open(path, "r", encoding="utf-8", errors="ignore") as f:
-                for line in f:
-                    d = line.strip().lower().strip(".")
-                 if d and "." in d and d not in low:
-                       low.add(d)
-                       domains.append(d)
-        elif name.endswith(".csv"):
-            with open(path, "r", encoding="utf-8", errors="ignore") as f:
-                reader = csv.DictReader(f)
-                # try several common column names
-                candidates = [c for c in reader.fieldnames or [] if c and c.lower() in ("domain","domains","fqdn")]
-                if not candidates:
-                    raise ValueError(f"No 'domain' column found in {path}. Columns: {reader.fieldnames}")
-                col = candidates[0]
-                for row in reader:
-                    d = (row.get(col) or "").strip().lower().strip(".")
-                 if d and "." in d and d not in low:
-                        low.add(d)
-                        domains.append(d)
-        else:
-            raise ValueError("Only .txt and .csv are supported")
-    except Exception:
-       raise
+    domains: list[str] = []
+    seen = set()
+
+    if name.endswith(".txt"):
+        with open(path, "r", encoding="utf-8", errors="ignore") as f:
+            for line in f:
+                d = normalize_domain(line)
+                if d and "." in d and d not in seen:
+                    seen.add(d)
+                    domains.append(d)
+
+    elif name.endswith(".csv"):
+        with open(path, "r", encoding="utf-8", errors="ignore", newline="") as f:
+            reader = csv.DictReader(f)
+            # Try several common column names
+            for row in reader:
+                d = ""
+                for col in COMMON_COLS:
+                    if col in row:
+                        d = normalize_domain(row.get(col, ""))
+                        if d:
+                            break
+                # Fallback: if no common column matched, try first column
+                if not d and row:
+                    first_key = next(iter(row.keys()))
+                    d = normalize_domain(row.get(first_key, ""))
+
+                if d and "." in d and d not in seen:
+                    seen.add(d)
+                    domains.append(d)
+    else:
+        raise ValueError("Only .txt and .csv are supported")
+
     return domains
 
-def write_labeled(domains, label, writer):
-    for d in domains:
-        writer.writerow({"domain": d, "label": label})
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--positives", required=True, help="File with DGA domains")
-    ap.add_argument("--negatives", required=True, help="File with legit domains")
-    ap.add_argument("--sample_pos", type=int, default=None)
-    ap.add_argument("--sample_neg", type=int, default=None)
-    args = ap.parse_args()
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Build labeled DGA dataset")
+    parser.add_argument("--positives", required=True, help="Path to DGA domains (.txt or .csv)")
+    parser.add_argument("--negatives", required=True, help="Path to legit domains (.txt or .csv)")
+    parser.add_argument("--sample_pos", type=int, default=0, help="Optional sample size for positives")
+    parser.add_argument("--sample_neg", type=int, default=0, help="Optional sample size for negatives")
+    args = parser.parse_args()
 
     pos = read_domains(args.positives)
     neg = read_domains(args.negatives)
 
-   if args.sample_pos and len(pos) > args.sample_pos:
+    # Optional sampling for quick experiments
+    if args.sample_pos and len(pos) > args.sample_pos:
         random.seed(42)
         pos = random.sample(pos, args.sample_pos)
     if args.sample_neg and len(neg) > args.sample_neg:
@@ -79,14 +109,17 @@ def main():
         neg = random.sample(neg, args.sample_neg)
 
     os.makedirs("data", exist_ok=True)
-    out_path = "data/dga_labeled.csv"
+    out_path = os.path.join("data", "dga_labeled.csv")
     with open(out_path, "w", encoding="utf-8", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=["domain","label"])
-        w.writeheader()
-        write_labeled(pos, 1, w)
-        write_labeled(neg, 0, w)
+        writer = csv.DictWriter(f, fieldnames=["domain", "label"])
+        writer.writeheader()
+        for d in pos:
+            writer.writerow({"domain": d, "label": 1})
+        for d in neg:
+            writer.writerow({"domain": d, "label": 0})
 
-    print(f"Wrote {out_path}: {len(pos)} positives, {len(neg)} negatives, total {len(pos)+len(neg)}")
+    print(f"Wrote {len(pos) + len(neg)} rows to {out_path}")
+
 
 if __name__ == "__main__":
     main()
