@@ -1,32 +1,8 @@
-"""
-scripts/build_dataset.py
-
-Create data/dga_labeled.csv from two local files that you provide:
-- positives: DGA domains (text or CSV)
-- negatives: legit domains (text or CSV)
-
-The input can be:
-- a .txt file with one domain per line
-- a .csv file with a column named "domain" (case insensitive)
-
-Usage
-python scripts/build_dataset.py --positives path/to/dga.txt --negatives path/to/legit.csv
-
-Optional
---sample_pos N   randomly sample N positives
---sample_neg N   randomly sample N negatives
-
-Output
-data/dga_labeled.csv with columns: domain,label
-"""
-
-# scripts/build_dataset.py
 import argparse
 import csv
 import os
 import random
 from typing import List
-
 
 COMMON_COLS = ["domain", "domains", "url", "host", "hostname", "fqdn"]
 
@@ -95,12 +71,14 @@ def main() -> None:
     if args.sample_pos and len(pos) > args.sample_pos:
         random.seed(42)
         pos = random.sample(pos, args.sample_pos)
+
     if args.sample_neg and len(neg) > args.sample_neg:
         random.seed(42)
         neg = random.sample(neg, args.sample_neg)
 
     os.makedirs("data", exist_ok=True)
     out_path = os.path.join("data", "dga_labeled.csv")
+
     with open(out_path, "w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=["domain", "label"])
         writer.writeheader()
