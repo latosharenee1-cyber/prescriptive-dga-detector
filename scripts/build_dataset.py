@@ -25,36 +25,30 @@ import argparse
 import csv
 import os
 import random
+from typing import List
 
 
-COMMON_COLS = [
-    "domain",
-    "domains",
-    "url",
-    "host",
-    "hostname",
-    "fqdn",
-]
+COMMON_COLS = ["domain", "domains", "url", "host", "hostname", "fqdn"]
 
 
 def normalize_domain(s: str) -> str:
-    """Lowercase, trim dots and whitespace."""
+    """Lowercase and strip dots and whitespace."""
     return (s or "").strip().lower().strip(".")
 
 
-def read_domains(path: str) -> list[str]:
+def read_domains(path: str) -> List[str]:
     """
     Read domains from a .txt or .csv file.
 
     - .txt: one domain per line
-    - .csv: uses common column names (domain, url, host, hostname, fqdn, etc.)
+    - .csv: tries common column names; falls back to first column
     """
     if not os.path.exists(path):
         raise FileNotFoundError(f"File not found: {path}")
 
-    name = os.path.basename(path).lower()
-    domains: list[str] = []
+    domains: List[str] = []
     seen = set()
+    name = os.path.basename(path).lower()
 
     if name.endswith(".txt"):
         with open(path, "r", encoding="utf-8", errors="ignore") as f:
@@ -67,7 +61,6 @@ def read_domains(path: str) -> list[str]:
     elif name.endswith(".csv"):
         with open(path, "r", encoding="utf-8", errors="ignore", newline="") as f:
             reader = csv.DictReader(f)
-            # Try several common column names
             for row in reader:
                 d = ""
                 for col in COMMON_COLS:
@@ -75,7 +68,6 @@ def read_domains(path: str) -> list[str]:
                         d = normalize_domain(row.get(col, ""))
                         if d:
                             break
-                # Fallback: if no common column matched, try first column
                 if not d and row:
                     first_key = next(iter(row.keys()))
                     d = normalize_domain(row.get(first_key, ""))
@@ -100,7 +92,6 @@ def main() -> None:
     pos = read_domains(args.positives)
     neg = read_domains(args.negatives)
 
-    # Optional sampling for quick experiments
     if args.sample_pos and len(pos) > args.sample_pos:
         random.seed(42)
         pos = random.sample(pos, args.sample_pos)
