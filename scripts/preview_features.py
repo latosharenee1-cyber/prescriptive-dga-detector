@@ -13,6 +13,7 @@ import argparse
 import math
 from collections import Counter
 
+
 def entropy(s):
     counts = Counter(s)
     n = len(s)
@@ -24,6 +25,7 @@ def entropy(s):
         if p > 0:
             ent -= p * (math.log(p, 2))
     return float(ent)
+
 
 def main():
     ap = argparse.ArgumentParser()
@@ -42,13 +44,14 @@ def main():
             else:
                 neg.append(d)
 
-    print(f"Rows: pos={len(pos)} neg={len(neg)} total={len(pos)+len(neg)}")
+    print(f"Rows: pos={len(pos)} neg={len(neg)} total={len(pos) + len(neg)}")
     print("\nSample positives:")
-    for d in pos[:args.n]:
+    for d in pos[: args.n]:
         print(f"  {d:35s}  len={len(d):3d}  ent={entropy(d):.3f}")
     print("\nSample negatives:")
-    for d in neg[:args.n]:
+    for d in neg[: args.n]:
         print(f"  {d:35s}  len={len(d):3d}  ent={entropy(d):.3f}")
+
 
 if __name__ == "__main__":
     main()

@@ -32,10 +32,13 @@ async def generate_summary(ioc_data, api_key):
                 if response.status != 200:
                     return f"Error: API returned status {response.status}. Response: {json.dumps(result)}"
 
-                if result.get('candidates'):
-                    return result['candidates'][0]['content']['parts'][0]['text']
+                if result.get("candidates"):
+                    return result["candidates"][0]["content"]["parts"][0]["text"]
                 else:
-                    return "Error: Could not generate summary. Full API Response: " + json.dumps(result)
+                    return (
+                        "Error: Could not generate summary. Full API Response: "
+                        + json.dumps(result)
+                    )
 
     except aiohttp.ClientConnectorError as e:
         return f"An error occurred: Could not connect to the API endpoint. {e}"
@@ -49,7 +52,7 @@ structured_iocs = {
     "threat_actors": ["APT42", "Fancy Bear"],
     "cves": ["CVE-2021-44228"],
     "ips": ["185.191.207.57"],
-    "hashes": ["275a021b7cf35a0b943505c61988cc05"]
+    "hashes": ["275a021b7cf35a0b943505c61988cc05"],
 }
 
 
@@ -61,8 +64,12 @@ async def main():
         print("🚨 Error: GOOGLE_API_KEY environment variable not set.")
         print("To run this script, you need to set your API key.")
         print("\nFor Linux/macOS, use:\n  export GOOGLE_API_KEY='YOUR_API_KEY_HERE'")
-        print("\nFor Windows (PowerShell), use:\n  $env:GOOGLE_API_KEY=\"YOUR_API_KEY_HERE\"")
-        print("\nReplace 'YOUR_API_KEY_HERE' with the key you obtained from Google AI Studio.")
+        print(
+            '\nFor Windows (PowerShell), use:\n  $env:GOOGLE_API_KEY="YOUR_API_KEY_HERE"'
+        )
+        print(
+            "\nReplace 'YOUR_API_KEY_HERE' with the key you obtained from Google AI Studio."
+        )
         print("---")
         sys.exit(1)
 
@@ -81,4 +88,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-

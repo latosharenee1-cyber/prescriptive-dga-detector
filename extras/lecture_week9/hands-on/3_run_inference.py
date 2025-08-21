@@ -10,7 +10,9 @@ tokenizer = AutoTokenizer.from_pretrained(model_path)
 model = AutoModelForTokenClassification.from_pretrained(model_path)
 
 # Create NER pipeline
-ner_pipeline = pipeline("ner", model=model, tokenizer=tokenizer, aggregation_strategy="simple")
+ner_pipeline = pipeline(
+    "ner", model=model, tokenizer=tokenizer, aggregation_strategy="simple"
+)
 
 # Test text
 text = "A new CISA alert links the malware Guloader to the threat actor APT42."

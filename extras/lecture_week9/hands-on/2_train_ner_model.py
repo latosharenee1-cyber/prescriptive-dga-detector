@@ -1,12 +1,17 @@
 # Filename: 2_train_ner_model.py
 
-from transformers import AutoTokenizer, AutoModelForTokenClassification, Trainer, TrainingArguments
+from transformers import (
+    AutoTokenizer,
+    AutoModelForTokenClassification,
+    Trainer,
+    TrainingArguments,
+)
 from datasets import load_dataset
 
 # ----------------------------------------------------
 # 1. Load dataset
 # ----------------------------------------------------
-raw_datasets = load_dataset('json', data_files='threat_reports.json')
+raw_datasets = load_dataset("json", data_files="threat_reports.json")
 
 # Example label list (adjust if your JSON has different label IDs)
 label_list = ["O", "B-THREAT", "I-THREAT"]
@@ -27,7 +32,7 @@ def tokenize_and_align_labels(examples):
         truncation=True,
         padding="max_length",  # <-- Added padding
         max_length=128,  # <-- Reasonable fixed length
-        is_split_into_words=True
+        is_split_into_words=True,
     )
 
     labels = []
@@ -67,7 +72,7 @@ model = AutoModelForTokenClassification.from_pretrained(
     "distilbert-base-uncased",
     num_labels=len(label_list),
     id2label={i: label for i, label in enumerate(label_list)},
-    label2id=label_to_id
+    label2id=label_to_id,
 )
 
 # ----------------------------------------------------
@@ -88,10 +93,7 @@ args = TrainingArguments(
 # 7. Trainer
 # ----------------------------------------------------
 trainer = Trainer(
-    model=model,
-    args=args,
-    train_dataset=train_dataset,
-    eval_dataset=eval_dataset
+    model=model, args=args, train_dataset=train_dataset, eval_dataset=eval_dataset
 )
 
 # ----------------------------------------------------

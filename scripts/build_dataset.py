@@ -13,12 +13,16 @@ def normalize_domain(s: str) -> str:
 
 
 def read_domains(path: str) -> List[str]:
+<<<<<<< HEAD
     """
     Read domains from a .txt or .csv file.
 
     - .txt: one domain per line
     - .csv: tries common column names; falls back to first column
     """
+=======
+    """Read domains from a .txt or .csv file."""
+>>>>>>> fbbd260 (Clean Ruff issues: dataset builder, training, analyzer)
     if not os.path.exists(path):
         raise FileNotFoundError(f"File not found: {path}")
 
@@ -51,6 +55,10 @@ def read_domains(path: str) -> List[str]:
                 if d and "." in d and d not in seen:
                     seen.add(d)
                     domains.append(d)
+<<<<<<< HEAD
+=======
+
+>>>>>>> fbbd260 (Clean Ruff issues: dataset builder, training, analyzer)
     else:
         raise ValueError("Only .txt and .csv are supported")
 
@@ -59,10 +67,25 @@ def read_domains(path: str) -> List[str]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Build labeled DGA dataset")
+<<<<<<< HEAD
     parser.add_argument("--positives", required=True, help="Path to DGA domains (.txt or .csv)")
     parser.add_argument("--negatives", required=True, help="Path to legit domains (.txt or .csv)")
     parser.add_argument("--sample_pos", type=int, default=0, help="Optional sample size for positives")
     parser.add_argument("--sample_neg", type=int, default=0, help="Optional sample size for negatives")
+=======
+    parser.add_argument(
+        "--positives", required=True, help="Path to DGA domains (.txt or .csv)"
+    )
+    parser.add_argument(
+        "--negatives", required=True, help="Path to legit domains (.txt or .csv)"
+    )
+    parser.add_argument(
+        "--sample_pos", type=int, default=0, help="Optional sample size for positives"
+    )
+    parser.add_argument(
+        "--sample_neg", type=int, default=0, help="Optional sample size for negatives"
+    )
+>>>>>>> fbbd260 (Clean Ruff issues: dataset builder, training, analyzer)
     args = parser.parse_args()
 
     pos = read_domains(args.positives)

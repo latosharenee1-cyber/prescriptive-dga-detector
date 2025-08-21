@@ -1,6 +1,7 @@
 # Filename: adaptive_playbook.py
 import numpy as np
 
+
 class AdaptivePlaybook:
     def __init__(self, actions, epsilon=0.1):
         self.actions = actions
@@ -19,4 +20,6 @@ class AdaptivePlaybook:
     def update_q_value(self, action, reward):
         self.action_counts[action] += 1
         # Update the average reward for the chosen action
-        self.q_values[action] += (reward - self.q_values[action]) / self.action_counts[action]
+        self.q_values[action] += (reward - self.q_values[action]) / self.action_counts[
+            action
+        ]
