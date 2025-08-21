@@ -31,7 +31,6 @@ import math
 import json
 import argparse
 import pandas as pd
-import numpy as np
 import h2o
 from h2o.automl import H2OAutoML
 
