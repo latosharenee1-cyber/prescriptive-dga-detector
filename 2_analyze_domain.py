@@ -14,7 +14,6 @@ print the structured summary and a helpful message instead of calling the API.
 """
 
 import os
-import sys
 import json
 import math
 import argparse
