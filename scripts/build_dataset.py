@@ -34,8 +34,9 @@ def read_domains(path):
             with open(path, "r", encoding="utf-8", errors="ignore") as f:
                 for line in f:
                     d = line.strip().lower().strip(".")
-                    if d and "." in d and d not in low:
-                        low.add(d); domains.append(d)
+                 if d and "." in d and d not in low:
+                       low.add(d)
+                       domains.append(d)
         elif name.endswith(".csv"):
             with open(path, "r", encoding="utf-8", errors="ignore") as f:
                 reader = csv.DictReader(f)
@@ -46,12 +47,13 @@ def read_domains(path):
                 col = candidates[0]
                 for row in reader:
                     d = (row.get(col) or "").strip().lower().strip(".")
-                    if d and "." in d and d not in low:
-                        low.add(d); domains.append(d)
+                 if d and "." in d and d not in low:
+                        low.add(d)
+                        domains.append(d)
         else:
             raise ValueError("Only .txt and .csv are supported")
-    except Exception as e:
-        raise
+    except Exception:
+       raise
     return domains
 
 def write_labeled(domains, label, writer):
@@ -69,10 +71,12 @@ def main():
     pos = read_domains(args.positives)
     neg = read_domains(args.negatives)
 
-    if args.sample_pos and len(pos) > args.sample_pos:
-        random.seed(42); pos = random.sample(pos, args.sample_pos)
+   if args.sample_pos and len(pos) > args.sample_pos:
+        random.seed(42)
+        pos = random.sample(pos, args.sample_pos)
     if args.sample_neg and len(neg) > args.sample_neg:
-        random.seed(42); neg = random.sample(neg, args.sample_neg)
+        random.seed(42)
+        neg = random.sample(neg, args.sample_neg)
 
     os.makedirs("data", exist_ok=True)
     out_path = "data/dga_labeled.csv"
