@@ -1,3 +1,4 @@
+Set-Content -LiteralPath "scripts/build_dataset.py" -NoNewline -Value @'
 import argparse
 import csv
 import os
@@ -88,3 +89,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+'@
