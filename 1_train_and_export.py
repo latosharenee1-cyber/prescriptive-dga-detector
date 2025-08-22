@@ -1,3 +1,4 @@
+Set-Content -LiteralPath "1_train_and_export.py" -NoNewline -Value @'
 import argparse
 import json
 import math
@@ -93,3 +94,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+'@
