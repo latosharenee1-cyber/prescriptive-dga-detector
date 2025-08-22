@@ -1,4 +1,3 @@
-Set-Content -LiteralPath "2_analyze_domain.py" -NoNewline -Value @'
 import argparse
 import json
 import math

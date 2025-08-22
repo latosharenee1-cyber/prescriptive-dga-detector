@@ -1,4 +1,3 @@
-Set-Content -LiteralPath "scripts/build_dataset.py" -NoNewline -Value @'
 import argparse
 import csv
 import os

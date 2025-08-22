@@ -1,4 +1,3 @@
-Set-Content -LiteralPath "1_train_and_export.py" -NoNewline -Value @'
 import argparse
 import json
 import math
