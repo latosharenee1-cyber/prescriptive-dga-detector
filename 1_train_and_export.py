@@ -32,10 +32,23 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Train DGA detector with H2O AutoML and export artifacts")
-    parser.add_argument("--csv", default="data/dga_labeled.csv", help="Path to labeled CSV with columns: domain,label")
-    parser.add_argument("--outdir", default="model", help="Output directory for artifacts")
-    parser.add_argument("--max_runtime_secs", type=int, default=120, help="AutoML max runtime in seconds")
+    parser = argparse.ArgumentParser(
+        description="Train DGA detector with H2O AutoML and export artifacts"
+    )
+    parser.add_argument(
+        "--csv",
+        default="data/dga_labeled.csv",
+        help="Path to labeled CSV with columns: domain,label",
+    )
+    parser.add_argument(
+        "--outdir", default="model", help="Output directory for artifacts"
+    )
+    parser.add_argument(
+        "--max_runtime_secs",
+        type=int,
+        default=120,
+        help="AutoML max runtime in seconds",
+    )
     args = parser.parse_args()
 
     os.makedirs(args.outdir, exist_ok=True)
@@ -54,11 +67,15 @@ def main() -> None:
         "std_length": float(df["length"].std(ddof=0)),
         "std_entropy": float(df["entropy"].std(ddof=0)),
     }
-    with open(os.path.join(args.outdir, "background_stats.json"), "w", encoding="utf-8") as f:
+    with open(
+        os.path.join(args.outdir, "background_stats.json"), "w", encoding="utf-8"
+    ) as f:
         json.dump(bg, f, indent=2)
 
     schema = {"features": ["length", "entropy"], "label": "label"}
-    with open(os.path.join(args.outdir, "feature_schema.json"), "w", encoding="utf-8") as f:
+    with open(
+        os.path.join(args.outdir, "feature_schema.json"), "w", encoding="utf-8"
+    ) as f:
         json.dump(schema, f, indent=2)
 
     h2o.init()
@@ -68,7 +85,9 @@ def main() -> None:
         x: List[str] = ["length", "entropy"]
         hf[y] = hf[y].asfactor()
 
-        aml = H2OAutoML(max_runtime_secs=args.max_runtime_secs, seed=42, exclude_algos=["GLM"])
+        aml = H2OAutoML(
+            max_runtime_secs=args.max_runtime_secs, seed=42, exclude_algos=["GLM"]
+        )
         aml.train(x=x, y=y, training_frame=hf)
 
         leader = aml.leader
@@ -86,7 +105,9 @@ def main() -> None:
             "features": x,
             "label": y,
         }
-        with open(os.path.join(args.outdir, "artifacts.json"), "w", encoding="utf-8") as f:
+        with open(
+            os.path.join(args.outdir, "artifacts.json"), "w", encoding="utf-8"
+        ) as f:
             json.dump(artifacts, f, indent=2)
     finally:
         h2o.shutdown(prompt=False)
@@ -94,4 +115,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-'@

@@ -56,10 +56,18 @@ def read_domains(path: str) -> List[str]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Build labeled DGA dataset")
-    parser.add_argument("--positives", required=True, help="Path to DGA domains (.txt or .csv)")
-    parser.add_argument("--negatives", required=True, help="Path to legit domains (.txt or .csv)")
-    parser.add_argument("--sample_pos", type=int, default=0, help="Optional sample size for positives")
-    parser.add_argument("--sample_neg", type=int, default=0, help="Optional sample size for negatives")
+    parser.add_argument(
+        "--positives", required=True, help="Path to DGA domains (.txt or .csv)"
+    )
+    parser.add_argument(
+        "--negatives", required=True, help="Path to legit domains (.txt or .csv)"
+    )
+    parser.add_argument(
+        "--sample_pos", type=int, default=0, help="Optional sample size for positives"
+    )
+    parser.add_argument(
+        "--sample_neg", type=int, default=0, help="Optional sample size for negatives"
+    )
     args = parser.parse_args()
 
     pos = read_domains(args.positives)
@@ -89,4 +97,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-'@

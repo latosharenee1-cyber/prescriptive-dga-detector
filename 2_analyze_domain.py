@@ -45,7 +45,9 @@ def load_artifacts(model_dir: str) -> Dict[str, str]:
         return json.load(f)
 
 
-def to_structured_summary(domain: str, prob_dga: float, contrib: Dict[str, float]) -> str:
+def to_structured_summary(
+    domain: str, prob_dga: float, contrib: Dict[str, float]
+) -> str:
     parts = [
         f"Domain: {domain}",
         f"Probability DGA: {prob_dga:.3f}",
@@ -94,9 +96,17 @@ def generate_playbook(summary: str) -> str:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Analyze a domain and generate a prescriptive playbook")
-    parser.add_argument("--domain", required=True, help="Domain to analyze, e.g., example.com")
-    parser.add_argument("--model_dir", default="model", help="Directory containing exported model artifacts")
+    parser = argparse.ArgumentParser(
+        description="Analyze a domain and generate a prescriptive playbook"
+    )
+    parser.add_argument(
+        "--domain", required=True, help="Domain to analyze, e.g., example.com"
+    )
+    parser.add_argument(
+        "--model_dir",
+        default="model",
+        help="Directory containing exported model artifacts",
+    )
     args = parser.parse_args()
 
     feats_df = build_features_for_domain(args.domain)
@@ -141,4 +151,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-'@
