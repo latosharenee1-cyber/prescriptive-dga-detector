@@ -1,3 +1,4 @@
+Set-Content -LiteralPath "2_analyze_domain.py" -NoNewline -Value @'
 import argparse
 import json
 import math
@@ -140,3 +141,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+'@
