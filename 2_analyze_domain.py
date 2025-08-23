@@ -23,12 +23,7 @@ def entropy(s: str) -> float:
 
 
 def build_features_for_domain(domain: str) -> pd.DataFrame:
-    return pd.DataFrame(
-        {
-            "length": [len(str(domain))],
-            "entropy": [entropy(str(domain))],
-        }
-    )
+    return pd.DataFrame({"length": [len(str(domain))], "entropy": [entropy(str(domain))]})
 
 
 def load_artifacts(model_dir: str) -> Dict[str, str]:
@@ -44,14 +39,8 @@ def load_artifacts(model_dir: str) -> Dict[str, str]:
         return json.load(f)
 
 
-def to_structured_summary(
-    domain: str, prob_dga: float, contrib: Dict[str, float]
-) -> str:
-    parts = [
-        f"Domain: {domain}",
-        f"Probability DGA: {prob_dga:.3f}",
-        "Top contributing features:",
-    ]
+def to_structured_summary(domain: str, prob_dga: float, contrib: Dict[str, float]) -> str:
+    parts = [f"Domain: {domain}", f"Probability DGA: {prob_dga:.3f}", "Top contributing features:"]
     for k, v in contrib.items():
         parts.append(f"  - {k}: {v:+.4f}")
     return "\n".join(parts)
@@ -69,7 +58,8 @@ def generate_playbook(summary: str) -> str:
             f"{summary}\n\n"
             "Playbook:\n"
             "1. Containment: Add domain to DNS blocklist or sinkhole. Isolate affected hosts.\n"
-            "2. Investigation: Search DNS, proxy, and EDR telemetry for related lookups. Check time windows and host overlap.\n"
+            "2. Investigation: Search DNS, proxy, and EDR telemetry for related lookups. "
+            "Check time windows and host overlap.\n"
             "3. Remediation: Clear scheduled tasks, kill processes, reset credentials if exfiltration suspected.\n"
             "4. Escalation: Notify incident response. Preserve logs and forensics artifacts.\n"
             "5. Monitoring: Set up alerts for similar entropy and length patterns in outbound DNS."
@@ -87,7 +77,8 @@ def generate_playbook(summary: str) -> str:
             f"{summary}\n\n"
             "Playbook generation failed, using fallback.\n"
             "1. Containment: Add domain to DNS blocklist or sinkhole. Isolate affected hosts.\n"
-            "2. Investigation: Search DNS, proxy, and EDR telemetry for related lookups. Check time windows and host overlap.\n"
+            "2. Investigation: Search DNS, proxy, and EDR telemetry for related lookups. "
+            "Check time windows and host overlap.\n"
             "3. Remediation: Clear scheduled tasks, kill processes, reset credentials if exfiltration suspected.\n"
             "4. Escalation: Notify incident response. Preserve logs and forensics artifacts.\n"
             f"(Reason: {exc})"
@@ -98,9 +89,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Analyze a domain and generate a prescriptive playbook"
     )
-    parser.add_argument(
-        "--domain", required=True, help="Domain to analyze, e.g., example.com"
-    )
+    parser.add_argument("--domain", required=True, help="Domain to analyze, e.g., example.com")
     parser.add_argument(
         "--model_dir",
         default="model",
@@ -138,7 +127,8 @@ def main() -> None:
 
         else:
             raise FileNotFoundError(
-                f"Neither binary model nor MOJO found. Looked for:\n  {bin_path}\n  {mojo_path}"
+                "Neither binary model nor MOJO found. "
+                f"Looked for:\n  {bin_path}\n  {mojo_path}"
             )
 
         summary = to_structured_summary(args.domain, prob_dga, contributions)
