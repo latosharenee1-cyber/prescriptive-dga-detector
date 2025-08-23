@@ -1,0 +1,6 @@
+{
+  "binary_model_path": "model/GBM_grid_1_AutoML_1_20250822_211057_model_16",
+  "mojo_path": "model/DGA_Leader.zip",
+  "features": ["length", "entropy"],
+  "label": "label"
+}
